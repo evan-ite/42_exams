@@ -1,3 +1,3 @@
-## Microshell 42 exam
+## 42 exams
 
-My solution to the 42 microshell exam. 
+My solution to the 42 microshell, miniserv and minidb exam. 
