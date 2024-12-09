@@ -11,8 +11,8 @@
 
 
 int server_fd; 
-char buffer[300000];
-char message[300000];
+char buffer[3000000];
+char message[3000000];
 int client_socks[1000];
 int client_ids[1000];
 int last_id = 0;
@@ -66,7 +66,7 @@ void handle_lines(char *buffer, int client_i) {
 	bzero(copy, sizeof(copy));
 
 	while (buffer[i]) {
-		if (buffer[i] == '\n' || buffer[i] == '\0') {
+		if (buffer[i] == '\n') {
 			// send line
 			strcpy(copy, &buffer[start]);
 			copy[i - start] = '\0';
