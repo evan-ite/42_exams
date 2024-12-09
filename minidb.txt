@@ -1,0 +1,51 @@
+Assignment name  : minidb
+Expected files   : *.cpp *.hpp
+--------------------------------------------------------------------------------------
+
+Program will listen to clients on localhost and given port. Clients can connect to a
+database of key-value pairs.
+
+./minidb <port> <filepath>
+
+Possible commands:
+
+POST:	POST <key> <value>
+return:	"0" or "1" on error
+
+GET:	GET <key>
+return: "0 <value>" or "1" on error
+
+DELETE: DELETE <key>
+return:	"0" or "1" on error
+
+Wrong command will return "2"
+
+There will be no whitespaces in key/value, and max 1000 characters.
+
+On SIGINT, the database should be saved to the filepath and exit.
+On load, the database should be loaded from the filepath.
+
+EXAMPLE:
+
+$> ./minidb 8080 .save & nc localhost 8080 | cat -e
+	POST A B
+	POST B C 
+	0$
+	GET A 
+	0 B$
+	GET C 
+	1$ 
+	DELETE A 
+	0$ 
+	DELETE C 
+	1$ 
+	UNKNOWN_COMMAND 
+	2$ 
+	^C 
+$> pkill -SIGINT minidb 
+$> ./minidb 8080 .save & echo "GET B" | nc localhost 8080 | cat -e
+	0 C$
+
+_____________________________________________________________________________________________________________________________
+
+
