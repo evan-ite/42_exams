@@ -29,7 +29,7 @@ EXAMPLE:
 
 $> ./minidb 8080 .save & nc localhost 8080 | cat -e
 	POST A B
-	POST B C 
+	POST B C
 	0$
 	GET A 
 	0 B$

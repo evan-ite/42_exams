@@ -111,8 +111,10 @@ public:
 						close(clients[i]);
 						clients[i] = 0;
 					}
-					else
+					else {
+						buffer[bytes] = '\0';
 						handleInput(clients[i], buffer);
+					}
 				}
 			}
 		}
@@ -181,37 +183,42 @@ private:
      */
 	void handleInput(int fd, std::string buffer) {
 		std::istringstream iss(buffer);
-		std::string cmd, key, value;
-		iss >> cmd;
+		std::string line;
 
-		int result = 2;
-		if (cmd == "POST") {
-			iss >> key >> value;
-			if (!key.empty() && !value.empty()) {
-				db[key] = value;
-				result = 0;
-			} else {
-				result = 1;
-			}
-		} else if (cmd == "GET") {
-			iss >> key;
-			if (!key.empty() && db.find(key) != db.end()) {
-				std::string response = db[key] + "\n";
-				send(fd, response.c_str(), response.size(), 0);
-				result = 0;
-			} else {
-				result = 1;
-			}
-		} else if (cmd == "DELETE") {
-			iss >> key;
-			if (!key.empty() && db.erase(key)) {
-				result = 0;
-			} else {
-				result = 1;
+		std::string response = std::to_string(2) + "\n";
+
+		while (std::getline(iss, line)) {
+			if (line.empty()) continue;
+
+			std::istringstream line_stream(line);
+			std::string cmd, key, value;
+			line_stream >> cmd;
+
+			if (cmd == "POST") {
+				line_stream >> key >> value;
+				if (!key.empty() && !value.empty()) {
+					db[key] = value;
+					response = std::to_string(0) + "\n";
+				} else {
+					response = std::to_string(1) + "\n";
+				}
+			} else if (cmd == "GET") {
+				line_stream >> key;
+				if (!key.empty() && db.find(key) != db.end()) {
+					response = std::to_string(0) + " " + db[key] + "\n";
+				} else {
+					response = std::to_string(1) + "\n";
+				}
+			} else if (cmd == "DELETE") {
+				line_stream >> key;
+				if (!key.empty() && db.erase(key)) {
+					response = std::to_string(0) + "\n";
+				} else {
+					response = std::to_string(1) + "\n";
+				}
 			}
 		}
 
-		std::string response = std::to_string(result) + "\n";
 		send(fd, response.c_str(), response.size(), 0);
 	}
 };
