@@ -171,7 +171,6 @@ class Server {
 		}
 
 		void saveDB() {
-
 			std::ofstream outfile(file);
 
 			for(std::map<std::string, std::string>::iterator it = db.begin(); it != db.end(); it++) {
