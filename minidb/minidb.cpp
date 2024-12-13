@@ -99,14 +99,14 @@ class Server {
 
 		int					server_fd, max_fd;
 		fd_set				all, readfds, writefds;
-		struct sockaddr_in	server_addr;
-		socklen_t			addrlen;
 		std::string			buffer;
 
-		static Server*		instance;
+		struct sockaddr_in	server_addr;
+		socklen_t			addrlen;
 
 		std::map<std::string, std::string>	db;
 
+		static Server*		instance;
 
 		void handle_input(std::string input, int fd) {
 			std::istringstream iss(input);
